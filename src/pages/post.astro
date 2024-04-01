@@ -1,0 +1,101 @@
+---
+import Layout from '../layouts/Layout.astro';
+const URL = import.meta.env.SECRET_API_BASE_URL;
+
+if (Astro.request.method === "POST") {
+  try {
+    const data = await Astro.request.formData();
+    const title = data.get("title");
+    const description = data.get("description");
+
+    const databody = {title, description}
+
+    // Do something with the data
+    const resp = await fetch(URL+'blogs',{
+        method:"POST",
+        body:JSON.stringify(databody),
+        headers:{
+            "Content-Type": "application/json"
+        }
+    })
+
+    console.log(resp);
+    return Astro.redirect('/');
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error(error.message);
+    }
+  }
+}
+---
+<Layout title="post a blog">\
+
+<body>
+  <h1>Input Form</h1>
+  <form method="post">
+    <label for="title">Title:</label>
+    <input type="text" id="title" name="title">
+
+    <label for="description">Description:</label>
+    <textarea id="description" name="description"></textarea>
+
+    <button type="submit">Submit</button>
+  </form>
+</body>
+</Layout>
+
+<style>
+    body {
+      font-family: Arial, sans-serif;
+      margin auto auto;
+    }
+
+    form {
+      width: 500px;
+      margin: 0 auto;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    input {
+      width: 100%;
+      padding: 5px;
+      /* margin-bottom: 5px; */
+    }
+
+    textarea {
+        width: 100%;
+      padding: 5px;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 5px 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 102%;
+      margin-top: 10px;
+    }
+
+    h1{
+        color: white;
+        width: 100%;
+        text-align: center;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+
+    }
+
+    label {
+        color: white;
+    }
+  </style>
